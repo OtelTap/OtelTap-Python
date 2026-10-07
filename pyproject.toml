@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel>=0.45"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oteltap"
+version = "0.1.0"
+description = "Embeddable OTLP receiver (http/protobuf format). Listens to all the telemetry on a given HTTP port, then allows you to stream it and await/assert it in tests. Optionally re-emits it to given endpoints. Also optionally prints it as NDJSON into standard output, so that your agents can instantly read, analyze and learn from it."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "OtelTap" }]
+requires-python = ">=3.10"
+keywords = ["opentelemetry", "otlp", "testing", "telemetry", "agentic ai", "agents", "ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "opentelemetry-proto>=1.30",
+    "protobuf>=5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/OtelTap/OtelTap-Python"
+Repository = "https://github.com/OtelTap/OtelTap-Python"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+oteltap = ["native/*.dll", "native/*.so", "native/*.dylib"]
