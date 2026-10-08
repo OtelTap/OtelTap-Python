@@ -54,16 +54,16 @@ async def _run(args: argparse.Namespace) -> None:
         awaitables = []
         if args.await_span is not None:
             print(f"Awaiting a span whose name matches '{args.await_span}'...")
-            pattern = re.compile(args.await_span)
-            awaitables.append(receiver.await_trace(lambda span: pattern.search(span.name) is not None))
+            span_pattern = re.compile(args.await_span)
+            awaitables.append(receiver.await_trace(lambda span: span_pattern.search(span.name) is not None))
         if args.await_log is not None:
             print(f"Awaiting a log record whose body matches '{args.await_log}'...")
-            pattern = re.compile(args.await_log)
-            awaitables.append(receiver.await_log(lambda log: pattern.search(log.body.string_value) is not None))
+            log_pattern = re.compile(args.await_log)
+            awaitables.append(receiver.await_log(lambda log: log_pattern.search(log.body.string_value) is not None))
         if args.await_metric is not None:
             print(f"Awaiting a metric whose name matches '{args.await_metric}'...")
-            pattern = re.compile(args.await_metric)
-            awaitables.append(receiver.await_metric(lambda metric: pattern.search(metric.name) is not None))
+            metric_pattern = re.compile(args.await_metric)
+            awaitables.append(receiver.await_metric(lambda metric: metric_pattern.search(metric.name) is not None))
 
         if not awaitables:
             # Nothing to await: just keep receiving (and printing) telemetry until interrupted (Ctrl+C).
