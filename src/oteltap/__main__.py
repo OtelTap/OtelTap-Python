@@ -17,6 +17,8 @@ import argparse
 import asyncio
 import re
 
+from google.protobuf.json_format import MessageToJson
+
 from .oteltap_http_protobuf_receiver import OtelTapHttpProtobufReceiver
 from .oteltap_http_protobuf_receiver_settings import OtelTapHttpProtobufReceiverSettings
 
@@ -47,14 +49,19 @@ async def _run(args: argparse.Namespace) -> None:
     )
 
     async with OtelTapHttpProtobufReceiver(settings) as receiver:
+        print(f"Listening for OTLP/HTTP telemetry on port {args.port}")
+
         awaitables = []
         if args.await_span is not None:
+            print(f"Awaiting a span whose name matches '{args.await_span}'...")
             pattern = re.compile(args.await_span)
             awaitables.append(receiver.await_trace(lambda span: pattern.search(span.name) is not None))
         if args.await_log is not None:
+            print(f"Awaiting a log record whose body matches '{args.await_log}'...")
             pattern = re.compile(args.await_log)
             awaitables.append(receiver.await_log(lambda log: pattern.search(log.body.string_value) is not None))
         if args.await_metric is not None:
+            print(f"Awaiting a metric whose name matches '{args.await_metric}'...")
             pattern = re.compile(args.await_metric)
             awaitables.append(receiver.await_metric(lambda metric: pattern.search(metric.name) is not None))
 
@@ -66,11 +73,17 @@ async def _run(args: argparse.Namespace) -> None:
         # Exit as soon as any one of the requested spans/logs/metrics is matched.
         tasks = [asyncio.ensure_future(awaitable) for awaitable in awaitables]
         try:
-            await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+            done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
         finally:
             for task in tasks:
                 if not task.done():
                     task.cancel()
+
+        # Print the matched message as nicely formatted JSON, as the very last output before exiting.
+        for task in done:
+            message = task.result()
+            print(f"Received a match:")
+            print(MessageToJson(message))
 
 
 def main() -> None:
