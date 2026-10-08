@@ -58,12 +58,14 @@ class _MessageChannel(Generic[T]):
                 if awaiter.predicate(message):
                     awaiter.future.set_result(message)
                     self._awaiters.pop(i)
+                    break
 
             except Exception as err:
                 # If predicate itself throws, re-throwing it in the future, so that the caller sees it
                 awaiter.future.set_exception(err)
                 # No sense keeping this broken awaiter in the list anyway
                 self._awaiters.pop(i)
+                break
 
     # Returns all messages in the channel as an asynchronous iterator
     async def stream(self) -> AsyncIterator[T]:
