@@ -75,7 +75,10 @@ async def _run(args: argparse.Namespace) -> None:
 
 def main() -> None:
     args = _parse_args()
-    asyncio.run(_run(args))
+    try:
+        asyncio.run(_run(args))
+    except KeyboardInterrupt:
+        pass  # Ctrl+C: exit quietly, OtelTapHttpProtobufReceiver.__aexit__ already stopped the receiver.
 
 
 if __name__ == "__main__":
