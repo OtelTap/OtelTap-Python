@@ -20,6 +20,9 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
     "Topic :: Software Development :: Testing",
     "Topic :: System :: Monitoring",
 ]
@@ -32,6 +35,9 @@ dependencies = [
 Homepage = "https://github.com/OtelTap/OtelTap-Python"
 Repository = "https://github.com/OtelTap/OtelTap-Python"
 
+[project.scripts]
+oteltap = "oteltap.__main__:main"
+
 [tool.setuptools]
 package-dir = { "" = "src" }
 include-package-data = true
@@ -40,4 +46,4 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-oteltap = ["native/*.dll", "native/*.so", "native/*.dylib"]
+oteltap = ["py.typed", "native/*.dll", "native/*.so", "native/*.dylib"]
