@@ -178,7 +178,7 @@ class OtelTapHttpProtobufReceiver:
             
             if data is not None:
                 # data is a serialized protobuf message, in bytes. FromString() is historically named so, it takes bytes.
-                await channel.write(message_type.FromString(data))
+                channel.write(message_type.FromString(data))
 
 
     async def _await_message(
