@@ -45,6 +45,12 @@ class OtelTapHttpProtobufReceiver:
         self._logs_channel = _MessageChannel[LogRecord]()
         self._metrics_channel = _MessageChannel[Metric]()
 
+    async def __aenter__(self) -> OtelTapHttpProtobufReceiver:
+        return await self.start()
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        await self.stop()
+
 
     async def start(self) -> OtelTapHttpProtobufReceiver:
         """Starts the HTTP/Protobuf receiver."""
