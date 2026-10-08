@@ -89,21 +89,21 @@ class OtelTapHttpProtobufReceiver:
         self._poll_tasks = [
             asyncio.create_task(
                 self._poll(
-                    OtelTapCore.poll_traces,
+                    OtelTapCore.oteltap_poll_trace,
                     Span,
                     self._traces_channel,
                 )
             ),
             asyncio.create_task(
                 self._poll(
-                    OtelTapCore.poll_logs,
+                    OtelTapCore.oteltap_poll_log,
                     LogRecord,
                     self._logs_channel,
                 )
             ),
             asyncio.create_task(
                 self._poll(
-                    OtelTapCore.poll_metrics,
+                    OtelTapCore.oteltap_poll_metric,
                     Metric,
                     self._metrics_channel,
                 )
